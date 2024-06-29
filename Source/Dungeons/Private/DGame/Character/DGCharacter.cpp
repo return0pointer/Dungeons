@@ -28,6 +28,10 @@ ADGCharacter::ADGCharacter()
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
+	GetCharacterMovement()->BrakingFrictionFactor = 0.000001f;
+	GetCharacterMovement()->MaxAcceleration = 600.f;
+	GetCharacterMovement()->BrakingDecelerationWalking = 800.f;
+
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
