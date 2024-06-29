@@ -15,5 +15,5 @@ ADGCharacterBase::ADGCharacterBase()
 
 void ADGCharacterBase::BeginPlay()
 {
-	Super::BeginPlay();	
+	Super::BeginPlay();
 }

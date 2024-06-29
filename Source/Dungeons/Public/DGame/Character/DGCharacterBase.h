@@ -22,8 +22,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
-	
-	
 	UPROPERTY(EditAnywhere, Category = "Equip")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 };
