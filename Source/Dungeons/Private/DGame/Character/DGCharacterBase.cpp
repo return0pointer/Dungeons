@@ -1,34 +1,19 @@
-
-
-
 #include "DGame/Character/DGCharacterBase.h"
+#include "CharacterTrajectoryComponent.h"
 
-// Sets default values
 ADGCharacterBase::ADGCharacterBase()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
-}
-
-// Called when the game starts or when spawned
-void ADGCharacterBase::BeginPlay()
-{
-	Super::BeginPlay();
+	CharacterTrajectory = CreateDefaultSubobject<UCharacterTrajectoryComponent>("CharacterTrajectory");
+	
+	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
+	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
+	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 }
 
-// Called every frame
-void ADGCharacterBase::Tick(float DeltaTime)
+void ADGCharacterBase::BeginPlay()
 {
-	Super::Tick(DeltaTime);
-
+	Super::BeginPlay();	
 }
-
-// Called to bind functionality to input
-void ADGCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-

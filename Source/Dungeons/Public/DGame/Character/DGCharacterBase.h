@@ -6,24 +6,24 @@
 #include "GameFramework/Character.h"
 #include "DGCharacterBase.generated.h"
 
-UCLASS()
+class UCharacterTrajectoryComponent;
+
+UCLASS(Abstract)
 class DUNGEONS_API ADGCharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	ADGCharacterBase();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equip")
+	TObjectPtr<UCharacterTrajectoryComponent> CharacterTrajectory;
+	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
+	
+	
+	UPROPERTY(EditAnywhere, Category = "Equip")
+	TObjectPtr<USkeletalMeshComponent> Weapon;
 };
