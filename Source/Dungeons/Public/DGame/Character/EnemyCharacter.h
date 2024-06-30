@@ -11,6 +11,7 @@ class DUNGEONS_API AEnemyCharacter : public ADGCharacterBase, public IEnemyInter
 	GENERATED_BODY()
 
 public:
+	AEnemyCharacter();
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
 
