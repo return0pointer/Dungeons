@@ -13,6 +13,11 @@ ADGCharacterBase::ADGCharacterBase()
 	
 }
 
+UAbilitySystemComponent* ADGCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
 void ADGCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
