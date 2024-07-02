@@ -5,7 +5,9 @@
 
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
+#include "DGame/Player/DGPlayerController.h"
 #include "DGame/Player/DGPlayerState.h"
+#include "DGame/UI/HUD/DGHUD.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -39,15 +41,6 @@ ADGCharacter::ADGCharacter()
 	bUseControllerRotationYaw = false;
 }
 
-void ADGCharacter::InitAbilityActorInfo()
-{
-	ADGPlayerState* DGPlayerState = GetPlayerState<ADGPlayerState>();
-	check(DGPlayerState);
-	DGPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(DGPlayerState, this);
-	AbilitySystemComponent = DGPlayerState->GetAbilitySystemComponent();
-	AttributeSet = DGPlayerState->GetAttributeSet();
-}
-
 void ADGCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -60,4 +53,23 @@ void ADGCharacter::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 
 	InitAbilityActorInfo();
+}
+
+
+void ADGCharacter::InitAbilityActorInfo()
+{
+	ADGPlayerState* DGPlayerState = GetPlayerState<ADGPlayerState>();
+	check(DGPlayerState);
+	DGPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(DGPlayerState, this);
+	AbilitySystemComponent = DGPlayerState->GetAbilitySystemComponent();
+	AttributeSet = DGPlayerState->GetAttributeSet();
+
+	if (ADGPlayerController* DGPlayerController = Cast<ADGPlayerController>(GetController()))
+	{
+		if (ADGHUD* DGHud = Cast<ADGHUD>(DGPlayerController->GetHUD()))
+		{
+			DGHud->InitOverlay(DGPlayerController, DGPlayerState, AbilitySystemComponent, AttributeSet);
+		}
+	}
+	
 }

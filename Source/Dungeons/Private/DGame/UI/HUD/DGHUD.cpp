@@ -22,7 +22,7 @@ void ADGHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystem
 	checkf(OverlayWidgetSubclass, TEXT("Overlay widget class unitialized, please fill out BP_DGHUD"));
 	checkf(OverlayWidgetControllerSubclass, TEXT("Overlay Widget Controller Class IsActorInitialized(), please fill out BP_DGHUD"));
 	
-	UDGUserWidget* OverlayWidget = CreateWidget<UDGUserWidget>(GetWorld(), OverlayWidgetSubclass);
+	OverlayWidget = CreateWidget<UDGUserWidget>(GetWorld(), OverlayWidgetSubclass);
 
 	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
 	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
