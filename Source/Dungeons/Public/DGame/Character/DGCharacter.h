@@ -11,7 +11,9 @@ class DUNGEONS_API ADGCharacter : public ADGCharacterBase
 
 public:
 	ADGCharacter();
-	
+	void InitAbilityActorInfo();
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
 	class UCameraComponent* Camera;
 

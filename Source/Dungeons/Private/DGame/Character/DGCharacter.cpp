@@ -3,7 +3,9 @@
 
 #include "DGame/Character/DGCharacter.h"
 
+#include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
+#include "DGame/Player/DGPlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -35,4 +37,27 @@ ADGCharacter::ADGCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+}
+
+void ADGCharacter::InitAbilityActorInfo()
+{
+	ADGPlayerState* DGPlayerState = GetPlayerState<ADGPlayerState>();
+	check(DGPlayerState);
+	DGPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(DGPlayerState, this);
+	AbilitySystemComponent = DGPlayerState->GetAbilitySystemComponent();
+	AttributeSet = DGPlayerState->GetAttributeSet();
+}
+
+void ADGCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitAbilityActorInfo();
+}
+
+void ADGCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	InitAbilityActorInfo();
 }
