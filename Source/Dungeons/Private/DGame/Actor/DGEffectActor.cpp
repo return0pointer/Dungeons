@@ -1,46 +1,31 @@
 #include "DGame/Actor/DGEffectActor.h"
 
 #include "AbilitySystemComponent.h"
-#include "AbilitySystemInterface.h"
-#include "Components/SphereComponent.h"
-#include "DGame/AbilitySystem/DGAttributeSet.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 
 ADGEffectActor::ADGEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	SetRootComponent(Mesh);
-	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
-	Sphere->SetupAttachment(GetRootComponent());
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
 }
 
-void ADGEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                               UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-                               const FHitResult& SweepResult)
-{
-	if (IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor))
-	{
-		const UDGAttributeSet* DGAttributeSet = Cast<UDGAttributeSet>(
-			ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UDGAttributeSet::StaticClass()));
-		UDGAttributeSet* mutableAttSet = const_cast<UDGAttributeSet*>(DGAttributeSet);
-		mutableAttSet->SetHealth(DGAttributeSet->GetHealth() + 25.f);
-		Destroy();
-	}
-}
 
-void ADGEffectActor::OnEndOverlap(UPrimitiveComponent* OnComponentEndOverlap, AActor* OtherActor,
-                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor))
-	{
-	}
-}
 
 void ADGEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ADGEffectActor::OnOverlap);
-	Sphere->OnComponentEndOverlap.AddDynamic(this, &ADGEffectActor::OnEndOverlap);
+}
+
+void ADGEffectActor::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass)
+{
+	
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
+
+	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(this);
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
+	TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
