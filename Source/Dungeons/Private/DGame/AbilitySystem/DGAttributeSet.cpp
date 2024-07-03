@@ -10,7 +10,7 @@ UDGAttributeSet::UDGAttributeSet()
 	InitMaxHealth(150.f);
 	InitMana(50.f);
 	InitMaxMana(80.f);
-	InitStamina(120.f);
+	InitStamina(20.f);
 	InitMaxStamina(100.f);
 }
 
@@ -23,6 +23,12 @@ void UDGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxStamina, COND_None, REPNOTIFY_Always);
+}
+
+void UDGAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+	
 }
 
 void UDGAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
