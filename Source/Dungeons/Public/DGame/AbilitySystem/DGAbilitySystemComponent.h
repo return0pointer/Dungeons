@@ -4,6 +4,8 @@
 #include "AbilitySystemComponent.h"
 #include "DGAbilitySystemComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTagsSignature, const FGameplayTagContainer&)
+
 UCLASS()
 class DUNGEONS_API UDGAbilitySystemComponent : public UAbilitySystemComponent
 {
@@ -11,6 +13,8 @@ class DUNGEONS_API UDGAbilitySystemComponent : public UAbilitySystemComponent
 
 public:
 	void AbilityActorInfoSet();
+
+	FEffectAssetTagsSignature OnEffectAssetTags;
 protected:
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 };

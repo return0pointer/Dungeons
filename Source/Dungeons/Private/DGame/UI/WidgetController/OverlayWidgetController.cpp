@@ -1,4 +1,6 @@
 #include "DGame/UI/WidgetController/OverlayWidgetController.h"
+
+#include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 #include "DGame/AbilitySystem/DGAttributeSet.h"
 
 void UOverlayWidgetController::BroadcastInitialValue()
@@ -32,6 +34,19 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		this, &UOverlayWidgetController::StaminaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DGAttributeSet->GetMaxStaminaAttribute()).AddUObject(
 		this, &UOverlayWidgetController::MaxStaminaChanged);
+
+	UDGAbilitySystemComponent* DgAbilitySystemComponent = Cast<UDGAbilitySystemComponent>(AbilitySystemComponent);
+	DgAbilitySystemComponent->OnEffectAssetTags.AddLambda(
+		[](const FGameplayTagContainer& AssetTags)
+		{
+			for (const FGameplayTag& Tag : AssetTags)
+			{
+				const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
+				GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Blue, Msg);
+		
+			}
+		}
+	);
 }
 
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
