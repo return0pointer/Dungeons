@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
+#include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 #include "DGame/Player/DGPlayerController.h"
 #include "DGame/Player/DGPlayerState.h"
 #include "DGame/UI/HUD/DGHUD.h"
@@ -60,8 +61,9 @@ void ADGCharacter::InitAbilityActorInfo()
 {
 	ADGPlayerState* DGPlayerState = GetPlayerState<ADGPlayerState>();
 	check(DGPlayerState);
-	DGPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(DGPlayerState, this);
+	DGPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(DGPlayerState, this);	
 	AbilitySystemComponent = DGPlayerState->GetAbilitySystemComponent();
+	Cast<UDGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	AttributeSet = DGPlayerState->GetAttributeSet();
 
 	if (ADGPlayerController* DGPlayerController = Cast<ADGPlayerController>(GetController()))
