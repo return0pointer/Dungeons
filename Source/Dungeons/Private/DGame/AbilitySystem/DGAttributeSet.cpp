@@ -21,12 +21,21 @@ UDGAttributeSet::UDGAttributeSet()
 void UDGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Strength, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
+
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxStamina, COND_None, REPNOTIFY_Always);
+
+	
 }
 
 void UDGAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -114,6 +123,27 @@ void UDGAttributeSet::OnRep_Stamina(const FGameplayAttributeData& OldStamina) co
 void UDGAttributeSet::OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStamina) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UDGAttributeSet, MaxStamina, OldMaxStamina);
+}
+
+
+void UDGAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDGAttributeSet, Strength, OldStrength);
+}
+
+void UDGAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDGAttributeSet, Intelligence, OldIntelligence);
+}
+
+void UDGAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDGAttributeSet, Resilience, OldResilience);
+}
+
+void UDGAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDGAttributeSet, Vigor, OldVigor);
 }
 
 

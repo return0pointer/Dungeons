@@ -73,5 +73,5 @@ void ADGCharacter::InitAbilityActorInfo()
 			DGHud->InitOverlay(DGPlayerController, DGPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
-	
+	InitializePrimaryAttributes();
 }
