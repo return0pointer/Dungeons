@@ -47,6 +47,7 @@ void ADGCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	InitAbilityActorInfo();
+	AddCharacterAbilities();
 }
 
 void ADGCharacter::OnRep_PlayerState()

@@ -2,6 +2,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "CharacterTrajectoryComponent.h"
+#include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 
 ADGCharacterBase::ADGCharacterBase()
 {
@@ -44,5 +45,13 @@ void ADGCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+}
+
+void ADGCharacterBase::AddCharacterAbilities()
+{
+	UDGAbilitySystemComponent* DgASC = CastChecked<UDGAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+
+	DgASC->AddCharacterAbilities(StartupAbilities);
 }
 

@@ -8,6 +8,7 @@
 #include "DGame/Interaction/CombatInterface.h"
 #include "DGCharacterBase.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 class UCharacterTrajectoryComponent;
 class UAbilitySystemComponent;
@@ -41,15 +42,21 @@ protected:
 
 	virtual void InitAbilityActorInfo();
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float level) const;
 	void InitializeDefaultAttributes() const;
+
+	void AddCharacterAbilities();
+private:
+
+	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 };
