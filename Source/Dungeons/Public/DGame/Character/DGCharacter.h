@@ -20,6 +20,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
 	class USpringArmComponent* SpringArmComponent;
 
+	virtual int32 GetPlayerLevel() override;
+
 protected:
 	virtual void InitAbilityActorInfo() override;
 };

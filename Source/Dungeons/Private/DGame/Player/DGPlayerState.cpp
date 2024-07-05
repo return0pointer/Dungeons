@@ -2,6 +2,7 @@
 
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 #include "DGame/AbilitySystem/DGAttributeSet.h"
+#include "Net/UnrealNetwork.h"
 
 
 ADGPlayerState::ADGPlayerState()
@@ -15,7 +16,19 @@ ADGPlayerState::ADGPlayerState()
 	NetUpdateFrequency = 100.f;
 }
 
+void ADGPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ADGPlayerState, Level);
+}
+
 UAbilitySystemComponent* ADGPlayerState::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void ADGPlayerState::OnRep_Level(int32 OldLevel)
+{
+	
 }

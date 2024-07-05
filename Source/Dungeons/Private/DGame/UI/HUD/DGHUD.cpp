@@ -4,6 +4,7 @@
 #include "DGame/UI/HUD/DGHUD.h"
 #include "DGame/UI/Widget/DGUserWidget.h"
 #include "Blueprint/UserWidget.h"
+#include "DGame/UI/WidgetController/AttributeMenuWidgetController.h"
 #include "DGame/UI/WidgetController/OverlayWidgetController.h"
 
 
@@ -16,6 +17,17 @@ UOverlayWidgetController* ADGHUD::GetOverlayWidgetController(const FWidgetContro
 		OverlayWidgetController->BindCallbacksToDependencies();
 	}
 	return OverlayWidgetController;
+}
+
+UAttributeMenuWidgetController* ADGHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if (AttributeMenuWidgetController == nullptr)
+	{
+		AttributeMenuWidgetController = NewObject<UAttributeMenuWidgetController>(this, AttributeMenuWidgetControllerClass);
+		AttributeMenuWidgetController->SetWidgetControllerParams(WCParams);
+		AttributeMenuWidgetController->BindCallbacksToDependencies();
+	}
+	return AttributeMenuWidgetController;
 }
 
 void ADGHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)

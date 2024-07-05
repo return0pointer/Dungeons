@@ -57,6 +57,13 @@ void ADGCharacter::OnRep_PlayerState()
 }
 
 
+int32 ADGCharacter::GetPlayerLevel()
+{
+	const ADGPlayerState* DGPlayerState = GetPlayerState<ADGPlayerState>();
+	check(DGPlayerState);
+	return DGPlayerState->GetPlayerLevel();
+}
+
 void ADGCharacter::InitAbilityActorInfo()
 {
 	ADGPlayerState* DGPlayerState = GetPlayerState<ADGPlayerState>();
@@ -73,5 +80,5 @@ void ADGCharacter::InitAbilityActorInfo()
 			DGHud->InitOverlay(DGPlayerController, DGPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
-	InitializePrimaryAttributes();
+	InitializeDefaultAttributes();
 }
