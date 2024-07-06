@@ -29,13 +29,13 @@ ADGCharacter::ADGCharacter()
 	Camera->bUsePawnControlRotation = false;	
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 250.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
-	GetCharacterMovement()->BrakingFrictionFactor = 0.000001f;
+	GetCharacterMovement()->BrakingFrictionFactor = 0.1f;
 	GetCharacterMovement()->MaxAcceleration = 600.f;
-	GetCharacterMovement()->BrakingDecelerationWalking = 800.f;
+	GetCharacterMovement()->BrakingDecelerationWalking = 1200.f;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;

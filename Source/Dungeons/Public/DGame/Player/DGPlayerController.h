@@ -40,6 +40,7 @@ private:
 
 	TObjectPtr<IEnemyInterface> LastActor;
 	TObjectPtr<IEnemyInterface> ThisActor;
+	FHitResult CursorHit;
 
 
 	void AbilityInputTagPressed(FGameplayTag InputTag);
@@ -65,4 +66,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> Spline;
+	
+	void AutoRun();
 };
