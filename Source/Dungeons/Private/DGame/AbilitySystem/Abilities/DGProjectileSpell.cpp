@@ -15,7 +15,7 @@ void UDGProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	
 }
 
-void UDGProjectileSpell::SpawnProjectile()
+void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
@@ -25,9 +25,15 @@ void UDGProjectileSpell::SpawnProjectile()
 	if (CombatInterface)
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
- 
+		DrawDebugSphere(GetOwningActorFromActorInfo()->GetWorld(), SocketLocation, 8, 8, FColor::Red, true, 20);
+		DrawDebugSphere(GetOwningActorFromActorInfo()->GetWorld(), ProjectileTargetLocation, 8, 8, FColor::Blue, true, 20);
+		DrawDebugLine(GetOwningActorFromActorInfo()->GetWorld(), SocketLocation, ProjectileTargetLocation, FColor::Green, true, 20);
+		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		Rotation.Pitch = 0.f;
+		
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetRotation(Rotation.Quaternion());
 		// TODO: Set the Projectile Rotation
 		
 		ADGProjectile* Projectile = GetWorld()->SpawnActorDeferred<ADGProjectile>(

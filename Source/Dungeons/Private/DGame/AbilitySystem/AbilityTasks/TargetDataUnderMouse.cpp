@@ -37,7 +37,7 @@ void UTargetDataUnderMouse::SendMouseCursorData()
 	ADGPlayerController* PC = Cast<ADGPlayerController>(Ability->GetCurrentActorInfo()->PlayerController);
 
 	FGameplayAbilityTargetDataHandle DataHandle;
-	FGameplayAbilityTargetData_SingleTargetHit* Data = new FGameplayAbilityTargetData_SingleTargetHit();
+	FGameplayAbilityTargetData_SingleTargetHit* Data = new FGameplayAbilityTargetData_SingleTargetHit();	
 	Data->HitResult = PC->GetCursorHit();
 	DataHandle.Add(Data);
 

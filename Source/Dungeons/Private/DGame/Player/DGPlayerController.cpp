@@ -14,6 +14,7 @@ ADGPlayerController::ADGPlayerController()
 {
 	bReplicates = true;
 
+	bAimingKeyDown = false;
 	bTargeting = false;
 
 	CachedDestination = FVector::ZeroVector;
@@ -83,6 +84,8 @@ void ADGPlayerController::SetupInputComponent()
 	UDGInputComponent* DgInputComponent = CastChecked<UDGInputComponent>(InputComponent);
 
 	DgInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADGPlayerController::Move);
+	DgInputComponent->BindAction(AimingAction, ETriggerEvent::Started, this, &ADGPlayerController::AimingPressed);
+	DgInputComponent->BindAction(AimingAction, ETriggerEvent::Completed, this, &ADGPlayerController::AimingReleased);
 
 	DgInputComponent->BindAbilityActions(InputConfig, this,
 	                                     &ADGPlayerController::AbilityInputTagPressed,
@@ -139,11 +142,9 @@ void ADGPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting)
-	{
-		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
-	}
-	else
+	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
+	
+	if (!bTargeting && !bAimingKeyDown)
 	{
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
@@ -178,7 +179,7 @@ void ADGPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting)
+	if (bTargeting || bAimingKeyDown)
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}

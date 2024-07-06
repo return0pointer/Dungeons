@@ -35,8 +35,14 @@ private:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
 
-	void Move(const FInputActionValue& InputActionValue);
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> AimingAction;
 
+	void Move(const FInputActionValue& InputActionValue);
+	void AimingPressed() { bAimingKeyDown = true; }
+	void AimingReleased() { bAimingKeyDown = false; }
+	bool bAimingKeyDown;
+	
 	void CursorTrace();
 
 	TObjectPtr<IEnemyInterface> LastActor;

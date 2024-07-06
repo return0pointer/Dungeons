@@ -2,6 +2,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "CharacterTrajectoryComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 
 ADGCharacterBase::ADGCharacterBase()
@@ -14,6 +15,8 @@ ADGCharacterBase::ADGCharacterBase()
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
 UAbilitySystemComponent* ADGCharacterBase::GetAbilitySystemComponent() const
