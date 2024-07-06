@@ -21,7 +21,7 @@ ADGProjectile::ADGProjectile()
 	ProjectileMovement->ProjectileGravityScale = 0.f;
 }
 
-void ADGProjectile::BeginPlay()
+void ADGProjectile::BeginPlay() 
 {
 	Super::BeginPlay();
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ADGProjectile::OnSphereOverlap);

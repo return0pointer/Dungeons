@@ -23,6 +23,7 @@ public:
 	ADGPlayerController();
 
 	virtual void PlayerTick(float DeltaTime) override;
+	FHitResult& GetCursorHit() { return CursorHit; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;

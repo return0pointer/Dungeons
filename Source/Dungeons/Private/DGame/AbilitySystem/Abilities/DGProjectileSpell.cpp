@@ -11,14 +11,21 @@ void UDGProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	const bool bIsServer = HasAuthority(&ActivationInfo);
+	
+	
+}
+
+void UDGProjectileSpell::SpawnProjectile()
+{
+	
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
 	ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
 	if (CombatInterface)
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
-
+ 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
 		// TODO: Set the Projectile Rotation
@@ -34,5 +41,4 @@ void UDGProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
-	
 }

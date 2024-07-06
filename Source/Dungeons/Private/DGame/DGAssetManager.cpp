@@ -2,7 +2,7 @@
 
 
 #include "DGame/DGAssetManager.h"
-
+#include "AbilitySystemGlobals.h"
 #include "DGame/DGGameplayTags.h"
 
 UDGAssetManager& UDGAssetManager::Get()
@@ -16,6 +16,6 @@ UDGAssetManager& UDGAssetManager::Get()
 void UDGAssetManager::StartInitialLoading()
 {
 	Super::StartInitialLoading();
-
 	FDGGameplayTags::Get().InitializeNativeGameplayTags();
+	UAbilitySystemGlobals::Get().InitGlobalData();
 }
