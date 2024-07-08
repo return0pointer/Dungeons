@@ -8,9 +8,9 @@ public class Dungeons : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "MotionTrajectory", "EnhancedInput", "GameplayAbilities", "GameplayTags", "GameplayTasks" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "MotionTrajectory", "EnhancedInput", "GameplayAbilities", "GameplayTags", "GameplayTasks", "MotionWarping" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "NavigationSystem" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "NavigationSystem", "Niagara" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

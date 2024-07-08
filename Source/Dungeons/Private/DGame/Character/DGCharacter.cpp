@@ -11,13 +11,14 @@
 #include "DGame/UI/HUD/DGHUD.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "MotionWarpingComponent.h"
 
 ADGCharacter::ADGCharacter()
 {
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->SetRelativeRotation(FRotator(-45.f, 0.f,0.f));
-	SpringArmComponent->TargetArmLength = 750.f;
+	SpringArmComponent->SetRelativeRotation(FRotator(-55.f, 0.f,0.f));
+	SpringArmComponent->TargetArmLength = 900.f;
 	SpringArmComponent->bUsePawnControlRotation = false;
 	SpringArmComponent->bEnableCameraLag = true;
 	SpringArmComponent->bInheritPitch = false;
@@ -40,6 +41,8 @@ ADGCharacter::ADGCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("UMotionWarping");
 }
 
 void ADGCharacter::PossessedBy(AController* NewController)

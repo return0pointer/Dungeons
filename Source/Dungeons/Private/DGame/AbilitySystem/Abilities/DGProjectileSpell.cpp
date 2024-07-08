@@ -1,5 +1,7 @@
 #include "DGame/AbilitySystem/Abilities/DGProjectileSpell.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "DGame/Actor/DGProjectile.h"
 #include "DGame/Interaction/CombatInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -34,7 +36,6 @@ void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
 		SpawnTransform.SetRotation(Rotation.Quaternion());
-		// TODO: Set the Projectile Rotation
 		
 		ADGProjectile* Projectile = GetWorld()->SpawnActorDeferred<ADGProjectile>(
 			ProjectileClass,
@@ -43,7 +44,9 @@ void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 			Cast<APawn>(GetOwningActorFromActorInfo()),
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
-		// TODO: Give the Projectile a Gameplay Effect Spec for causing Damage.
+		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		Projectile->DamageEffectSpecHandle = SpecHandle;
 		
 		Projectile->FinishSpawning(SpawnTransform);
 	}

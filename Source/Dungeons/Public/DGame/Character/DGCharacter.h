@@ -20,6 +20,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
 	class USpringArmComponent* SpringArmComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+	class UMotionWarpingComponent* MotionWarpingComponent;
+
+	
 	virtual int32 GetPlayerLevel() override;
 
 protected:

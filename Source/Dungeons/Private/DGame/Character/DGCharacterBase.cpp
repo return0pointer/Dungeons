@@ -4,6 +4,7 @@
 #include "CharacterTrajectoryComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
+#include "Dungeons/Dungeons.h"
 
 ADGCharacterBase::ADGCharacterBase()
 {
@@ -16,7 +17,11 @@ ADGCharacterBase::ADGCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+	
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
 }
 
 UAbilitySystemComponent* ADGCharacterBase::GetAbilitySystemComponent() const
