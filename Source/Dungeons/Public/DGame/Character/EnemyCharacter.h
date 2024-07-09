@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DGame/AbilitySystem/Data/CharacterClassInfo.h"
 #include "DGame/Character/DGCharacterBase.h"
 #include "DGame/Interaction/EnemyInterface.h"
 #include "DGame/UI/WidgetController/OverlayWidgetController.h"
@@ -28,16 +29,22 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangeSignature OnHealthChanged;
-
+	
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangeSignature OnMaxHealthChanged;
 
 protected:
 	virtual void InitAbilityActorInfo() override;
+	virtual void InitializeDefaultAttributes() const override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
-	int32 Level = 1;
+	int32 Level;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
+	ECharacterClass CharacterClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
+
+	
 };

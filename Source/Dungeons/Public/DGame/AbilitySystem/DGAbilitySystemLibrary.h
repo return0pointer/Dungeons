@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/CharacterClassInfo.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "DGAbilitySystemLibrary.generated.h"
 
-class UAttributeMenuWidgetController;
+class UAttributeMenuWidgetController; 
 class UOverlayWidgetController;
+class UAbilitySystemComponent;
 /**
  * 
  */
@@ -22,4 +24,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="DGAbilitySystemLibrary|WidgetController")
 	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category="DGAbilitySystemLibrary|Character Class Defaults")
+	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
 };

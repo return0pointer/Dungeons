@@ -1,6 +1,7 @@
 #include "DGame/Character/EnemyCharacter.h"
 #include "Components/WidgetComponent.h"
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
+#include "DGame/AbilitySystem/DGAbilitySystemLibrary.h"
 #include "DGame/AbilitySystem/DGAttributeSet.h"
 #include "DGame/UI/Widget/DGUserWidget.h"
 #include "Dungeons/Dungeons.h"
@@ -19,6 +20,9 @@ AEnemyCharacter::AEnemyCharacter()
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
+
+	Level = 1;
+	CharacterClass = ECharacterClass::Warrior;
 }
 
 void AEnemyCharacter::HighlightActor()
@@ -81,4 +85,9 @@ void AEnemyCharacter::InitAbilityActorInfo()
 	Cast<UDGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
 	InitializeDefaultAttributes();
+}
+
+void AEnemyCharacter::InitializeDefaultAttributes() const
+{
+	UDGAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);	
 }

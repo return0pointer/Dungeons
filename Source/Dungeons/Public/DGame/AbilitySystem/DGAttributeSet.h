@@ -142,7 +142,13 @@ public:
 	FGameplayAttributeData Stamina;
 	ATTRIBUTE_ACCESSORS(UDGAttributeSet, Stamina)
 	
-	
+	/*
+	 * Meta Attributes
+	 */
+
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UDGAttributeSet, IncomingDamage)
 
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
