@@ -67,3 +67,16 @@ void UDGAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldCo
 	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }
+
+void UDGAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+{
+	const ADGGameMode* GM = Cast<ADGGameMode>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (GM == nullptr) return;
+
+	UCharacterClassInfo* CharacterClassInfo = GM->CharacterClassInfo;
+	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		ASC->GiveAbility(AbilitySpec);
+	}
+}

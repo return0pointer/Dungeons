@@ -78,6 +78,8 @@ void AEnemyCharacter::BeginPlay()
 	
 	InitAbilityActorInfo();
 
+	UDGAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+
 	SetupBinding();
 }
 

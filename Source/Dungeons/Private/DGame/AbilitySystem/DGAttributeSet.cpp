@@ -112,6 +112,12 @@ void UDGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 			SetHealth((FMath::Clamp(NewHealth, 0.f, GetMaxHealth())));
 
 			const bool bFatal = NewHealth <= 0.f;
+			if (!bFatal)
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FDGGameplayTags::Get().Effects_HitReact);
+				Properties.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
 		}
 	}
 	
