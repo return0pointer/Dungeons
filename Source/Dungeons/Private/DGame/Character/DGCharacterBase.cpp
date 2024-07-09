@@ -52,6 +52,8 @@ void ADGCharacterBase::MulticastHandleDeath_Implementation()
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCapsuleComponent()->SetSimulatePhysics(false);
+	Dissolve();
 }
 
 
@@ -101,6 +103,13 @@ void ADGCharacterBase::Dissolve()
 	{
 		UMaterialInstanceDynamic* DynamicMaterialInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);		
 		GetMesh()->SetMaterial(0, DynamicMaterialInst);
+		StartDissolveTimeline(DynamicMaterialInst);
+	}
+	if (IsValid(WeaponDissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMaterialInst = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);		
+		Weapon->SetMaterial(0, DynamicMaterialInst);
+		StartWeaponDissolveTimeline(DynamicMaterialInst);
 	}
 }
 
