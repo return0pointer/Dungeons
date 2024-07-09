@@ -1,11 +1,12 @@
 #include "DGame/Character/EnemyCharacter.h"
 #include "Components/WidgetComponent.h"
+#include "DGame/DGGameplayTags.h"
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 #include "DGame/AbilitySystem/DGAbilitySystemLibrary.h"
 #include "DGame/AbilitySystem/DGAttributeSet.h"
 #include "DGame/UI/Widget/DGUserWidget.h"
 #include "Dungeons/Dungeons.h"
-
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 AEnemyCharacter::AEnemyCharacter()
@@ -15,7 +16,7 @@ AEnemyCharacter::AEnemyCharacter()
 	AbilitySystemComponent = CreateDefaultSubobject<UDGAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
-	
+
 	AttributeSet = CreateDefaultSubobject<UDGAttributeSet>("AttributeSet");
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
@@ -39,13 +40,13 @@ void AEnemyCharacter::UnHighlightActor()
 	Weapon->SetRenderCustomDepth(false);
 }
 
-void AEnemyCharacter::SetupHealthBar()
+void AEnemyCharacter::SetupBinding()
 {
 	if (UDGUserWidget* HealthBarWidget = Cast<UDGUserWidget>(HealthBar->GetUserWidgetObject()))
 	{
 		HealthBarWidget->SetWidgetController(this);
-	}	
-	
+	}
+
 	if (const UDGAttributeSet* DgAS = Cast<UDGAttributeSet>(AttributeSet))
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DgAS->GetHealthAttribute()).AddLambda(
@@ -60,6 +61,11 @@ void AEnemyCharacter::SetupHealthBar()
 				OnMaxHealthChanged.Broadcast(Data.NewValue);
 			});
 
+		AbilitySystemComponent->RegisterGameplayTagEvent(
+			FDGGameplayTags::Get().Effects_HitReact,
+		    EGameplayTagEventType::NewOrRemoved).AddUObject(
+			this, &AEnemyCharacter::HitReactTagChanged);
+
 		OnHealthChanged.Broadcast(DgAS->GetHealth());
 		OnMaxHealthChanged.Broadcast(DgAS->GetMaxHealth());
 	}
@@ -68,15 +74,22 @@ void AEnemyCharacter::SetupHealthBar()
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+	
 	InitAbilityActorInfo();
 
-	SetupHealthBar();
-	
+	SetupBinding();
 }
 
 int32 AEnemyCharacter::GetPlayerLevel()
 {
 	return Level;
+}
+
+void AEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bHitReacting = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed; 
 }
 
 void AEnemyCharacter::InitAbilityActorInfo()
@@ -89,5 +102,5 @@ void AEnemyCharacter::InitAbilityActorInfo()
 
 void AEnemyCharacter::InitializeDefaultAttributes() const
 {
-	UDGAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);	
+	UDGAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }

@@ -18,13 +18,18 @@ public:
 	AEnemyCharacter();
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
-	void SetupHealthBar();
+	void SetupBinding();
 
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(BlueprintReadOnly)
 	bool bHighlighted = false;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	bool bHitReacting = false;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 250.f;
+	
 	virtual int32 GetPlayerLevel() override;
 
 	UPROPERTY(BlueprintAssignable)
@@ -32,6 +37,8 @@ public:
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangeSignature OnMaxHealthChanged;
+
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 protected:
 	virtual void InitAbilityActorInfo() override;
@@ -45,6 +52,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
+
 
 	
 };

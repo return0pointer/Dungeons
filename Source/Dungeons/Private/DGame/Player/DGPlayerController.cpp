@@ -95,6 +95,7 @@ void ADGPlayerController::SetupInputComponent()
 
 void ADGPlayerController::Move(const FInputActionValue& InputActionValue)
 {
+	bAutoRunning = false;
 	const FVector2d InputAxisVector = InputActionValue.Get<FVector2d>();
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
