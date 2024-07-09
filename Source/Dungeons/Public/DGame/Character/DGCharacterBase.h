@@ -39,10 +39,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Equip")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
-
-	UPROPERTY(EditAnywhere, Category = "Equip")
+	
+	UPROPERTY(EditAnywhere, Category = "_Settings|Equip")
 	FName WeaponTipSocketName;
-
+	
 	virtual FVector GetCombatSocketLocation();
 	
 	UPROPERTY()
@@ -53,13 +53,13 @@ protected:
 
 	virtual void InitAbilityActorInfo();
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS|Attributes")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS|Attributes")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS|Attributes")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float level) const;
@@ -74,16 +74,17 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartDessolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="_Settings|Material")
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="_Settings|Material")
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 private:
 
-	UPROPERTY(EditAnywhere, Category = "GAS|Abilities")
+	UPROPERTY(EditAnywhere, Category = "_Settings|GAS|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
-	UPROPERTY(EditAnywhere, Category = "Combat")
+	UPROPERTY(EditAnywhere, Category = "_Settings|Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+	
 };
