@@ -22,6 +22,11 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USphereComponent> Sphere;
+
+	void SetOwnerAvatar(AActor* InOwnerAvatar) { OwnerAvatar = InOwnerAvatar; }
 	
 protected:
 	virtual void BeginPlay() override;
@@ -38,8 +43,10 @@ private:
 
 	bool bHit;
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USphereComponent> Sphere;
+	UPROPERTY()
+	TObjectPtr<AActor> OwnerAvatar = nullptr;
+
+	
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UNiagaraSystem> ImpactEffect;

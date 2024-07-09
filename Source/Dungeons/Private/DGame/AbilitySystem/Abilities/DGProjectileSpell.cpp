@@ -2,6 +2,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Components/SphereComponent.h"
 #include "DGame/DGGameplayTags.h"
 #include "DGame/Actor/DGProjectile.h"
 #include "DGame/Interaction/CombatInterface.h"
@@ -27,9 +28,10 @@ void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 	if (CombatInterface)
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
-		DrawDebugSphere(GetOwningActorFromActorInfo()->GetWorld(), SocketLocation, 8, 8, FColor::Red, true, 20);
-		DrawDebugSphere(GetOwningActorFromActorInfo()->GetWorld(), ProjectileTargetLocation, 8, 8, FColor::Blue, true, 20);
-		DrawDebugLine(GetOwningActorFromActorInfo()->GetWorld(), SocketLocation, ProjectileTargetLocation, FColor::Green, true, 20);
+		AActor* Owner = GetOwningActorFromActorInfo();
+		DrawDebugSphere(Owner->GetWorld(), SocketLocation, 8, 8, FColor::Red, true, 20);
+		DrawDebugSphere(Owner->GetWorld(), ProjectileTargetLocation, 8, 8, FColor::Blue, true, 20);
+		DrawDebugLine(Owner->GetWorld(), SocketLocation, ProjectileTargetLocation, FColor::Green, true, 20);
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 		Rotation.Pitch = 0.f;
 		
@@ -40,9 +42,11 @@ void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 		ADGProjectile* Projectile = GetWorld()->SpawnActorDeferred<ADGProjectile>(
 			ProjectileClass,
 			SpawnTransform,
-			GetOwningActorFromActorInfo(),
-			Cast<APawn>(GetOwningActorFromActorInfo()),
+			Owner,
+			Cast<APawn>(Owner),
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+		Projectile->SetOwnerAvatar(GetAvatarActorFromActorInfo());
 
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
