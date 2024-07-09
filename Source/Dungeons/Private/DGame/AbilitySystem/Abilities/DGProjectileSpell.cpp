@@ -5,7 +5,6 @@
 #include "DGame/DGGameplayTags.h"
 #include "DGame/Actor/DGProjectile.h"
 #include "DGame/Interaction/CombatInterface.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 void UDGProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                          const FGameplayAbilityActorInfo* ActorInfo,

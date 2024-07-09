@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "DGPlayerController.generated.h"
 
+class UDamageTextComponent;
 class UDGInputConfig;
 class IEnemyInterface;
 class UInputMappingContext;
@@ -24,6 +25,10 @@ public:
 
 	virtual void PlayerTick(float DeltaTime) override;
 	FHitResult& GetCursorHit() { return CursorHit; }
+
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -75,4 +80,7 @@ private:
 	TObjectPtr<USplineComponent> Spline;
 	
 	void AutoRun();
+
+	UPROPERTY(EditDefaultsOnly, Category="_Setting|Widget")
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
 };

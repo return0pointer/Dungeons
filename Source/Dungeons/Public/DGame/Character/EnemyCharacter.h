@@ -55,6 +55,5 @@ protected:
 	ECharacterClass CharacterClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UWidgetComponent> HealthBar;
-	
+	TObjectPtr<UWidgetComponent> HealthBar;	
 };

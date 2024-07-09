@@ -1,18 +1,15 @@
-
-
-
 #include "DGame/AbilitySystem/DGAttributeSet.h"
-
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "GameplayEffectExtension.h"
 #include "DGame/DGGameplayTags.h"
 #include "DGame/Interaction/CombatInterface.h"
+#include "DGame/Player/DGPlayerController.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 UDGAttributeSet::UDGAttributeSet()
 {
-	
 	const FDGGameplayTags& GameplayTags = FDGGameplayTags::Get();
 
 	// Primary Attributes
@@ -33,18 +30,17 @@ UDGAttributeSet::UDGAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_StaminaRegeneration, GetStaminaRegenerationAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
-	 
 }
 
 void UDGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
+
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
-		
+
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, Stamina, COND_None, REPNOTIFY_Always);
@@ -58,11 +54,10 @@ void UDGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, HealthRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, ManaRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, StaminaRegeneration, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);	
+	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);	
+	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDGAttributeSet, MaxStamina, COND_None, REPNOTIFY_Always);
-
 }
 
 void UDGAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -83,6 +78,18 @@ void UDGAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	}
 }
 
+void UDGAttributeSet::ShowFloatingText(const FEffectProperties& Properties, const float Damage) const
+{
+	if (Properties.SourceCharacter != Properties.TargetCharacter)
+	{
+		if (ADGPlayerController* PC = Cast<ADGPlayerController>(
+			UGameplayStatics::GetPlayerController(Properties.SourceCharacter, 0)))
+		{
+			PC->ShowDamageNumber(Damage, Properties.TargetCharacter);
+		}
+	}
+}
+
 void UDGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -93,7 +100,8 @@ void UDGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
-		UE_LOG(LogTemp, Warning, TEXT("Changed Health on %s, Health: %f"), *Properties.TargetAvatarActor->GetName(), GetHealth());
+		UE_LOG(LogTemp, Warning, TEXT("Changed Health on %s, Health: %f"), *Properties.TargetAvatarActor->GetName(),
+		       GetHealth());
 	}
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
@@ -115,10 +123,10 @@ void UDGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 			const bool bFatal = NewHealth <= 0.f;
 			if (bFatal)
 			{
-				if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(Properties.TargetAvatarActor))
+				if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Properties.TargetAvatarActor))
 				{
 					CombatInterface->Die();
-				}				
+				}
 			}
 			else
 			{
@@ -126,9 +134,10 @@ void UDGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 				TagContainer.AddTag(FDGGameplayTags::Get().Effects_HitReact);
 				Properties.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
+
+			ShowFloatingText(Properties, LocalIncomingDamage);
 		}
 	}
-	
 }
 
 void UDGAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
@@ -230,11 +239,11 @@ void UDGAttributeSet::OnRep_MaxStamina(const FGameplayAttributeData& OldMaxStami
 
 void UDGAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Properties)
 {
-
 	Properties.EffectContextHandle = Data.EffectSpec.GetContext();
 	Properties.SourceASC = Properties.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
 
-	if (IsValid(Properties.SourceASC) && Properties.SourceASC->AbilityActorInfo.IsValid() && Properties.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
+	if (IsValid(Properties.SourceASC) && Properties.SourceASC->AbilityActorInfo.IsValid() && Properties.SourceASC->
+		AbilityActorInfo->AvatarActor.IsValid())
 	{
 		Properties.SourceAvatarActor = Properties.SourceASC->AbilityActorInfo->AvatarActor.Get();
 		Properties.SourceController = Properties.SourceASC->AbilityActorInfo->PlayerController.Get();
@@ -258,5 +267,4 @@ void UDGAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& 
 		Properties.TargetCharacter = Cast<ACharacter>(Properties.TargetAvatarActor);
 		Properties.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Properties.TargetAvatarActor);
 	}
-	
 }
