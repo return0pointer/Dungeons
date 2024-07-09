@@ -95,3 +95,12 @@ void ADGCharacterBase::AddCharacterAbilities()
 	DgASC->AddCharacterAbilities(StartupAbilities);
 }
 
+void ADGCharacterBase::Dissolve()
+{
+	if (IsValid(DissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMaterialInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);		
+		GetMesh()->SetMaterial(0, DynamicMaterialInst);
+	}
+}
+
