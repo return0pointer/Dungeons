@@ -7,6 +7,7 @@
 #include "Net/UnrealNetwork.h"
 #include "GameplayEffectExtension.h"
 #include "DGame/DGGameplayTags.h"
+#include "DGame/Interaction/CombatInterface.h"
 #include "GameFramework/Character.h"
 
 UDGAttributeSet::UDGAttributeSet()
@@ -112,7 +113,14 @@ void UDGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 			SetHealth((FMath::Clamp(NewHealth, 0.f, GetMaxHealth())));
 
 			const bool bFatal = NewHealth <= 0.f;
-			if (!bFatal)
+			if (bFatal)
+			{
+				if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(Properties.TargetAvatarActor))
+				{
+					CombatInterface->Die();
+				}				
+			}
+			else
 			{
 				FGameplayTagContainer TagContainer;
 				TagContainer.AddTag(FDGGameplayTags::Get().Effects_HitReact);

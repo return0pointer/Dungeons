@@ -24,6 +24,8 @@ AEnemyCharacter::AEnemyCharacter()
 
 	Level = 1;
 	CharacterClass = ECharacterClass::Warrior;
+	BaseWalkSpeed = 250.f;
+	LifeSpanAfterDie = 5.f;
 }
 
 void AEnemyCharacter::HighlightActor()
@@ -86,6 +88,12 @@ void AEnemyCharacter::BeginPlay()
 int32 AEnemyCharacter::GetPlayerLevel()
 {
 	return Level;
+}
+
+void AEnemyCharacter::Die()
+{
+	SetLifeSpan(LifeSpanAfterDie);
+	Super::Die();	
 }
 
 void AEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)

@@ -28,9 +28,13 @@ public:
 	bool bHitReacting = false;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	float BaseWalkSpeed = 250.f;
+	float BaseWalkSpeed;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float LifeSpanAfterDie;
 	
 	virtual int32 GetPlayerLevel() override;
+	virtual void Die() override;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangeSignature OnHealthChanged;
@@ -52,7 +56,5 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
-
-
 	
 };
