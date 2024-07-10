@@ -44,12 +44,9 @@ UAttributeMenuWidgetController* UDGAbilitySystemLibrary::GetAttributeMenuWidgetC
 
 void UDGAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
 {
-	const ADGGameMode* GM = Cast<ADGGameMode>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (GM == nullptr) return;
-
 	const AActor* AvatarActor = ASC->GetAvatarActor();
 	
-	UCharacterClassInfo* CharacterClassInfo = GM->CharacterClassInfo;
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 	const FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
 
 	FGameplayEffectContextHandle PrimaryAttributesContextHandle =  ASC->MakeEffectContext();
@@ -70,13 +67,18 @@ void UDGAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldCo
 
 void UDGAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
-	const ADGGameMode* GM = Cast<ADGGameMode>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (GM == nullptr) return;
-
-	UCharacterClassInfo* CharacterClassInfo = GM->CharacterClassInfo;
-	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(AbilitySpec);
 	}
+}
+
+UCharacterClassInfo* UDGAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
+{
+	const ADGGameMode* GM = Cast<ADGGameMode>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (GM == nullptr) return nullptr;
+
+	return GM->CharacterClassInfo;
 }
