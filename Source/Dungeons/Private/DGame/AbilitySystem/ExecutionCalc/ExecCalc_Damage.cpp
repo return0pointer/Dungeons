@@ -1,5 +1,6 @@
 #include "DGame/AbilitySystem/ExecutionCalc/ExecCalc_Damage.h"
 #include "AbilitySystemComponent.h"
+#include "DGame/DGAbilityTypes.h"
 #include "DGame/DGGameplayTags.h"
 #include "DGame/AbilitySystem/DGAbilitySystemLibrary.h"
 #include "DGame/AbilitySystem/DGAttributeSet.h"
@@ -69,8 +70,13 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluateParameters, TargetBlockChance);
 	TargetBlockChance = FMath::Max<float>(TargetBlockChance, 0.f);
 
-	// Block chance, if be blocked halve the damage
+	
 	const bool bBlocked = FMath::FRandRange(0.f, 100.f) < TargetBlockChance;
+
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	UDGAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
+	
+	// Block chance, if be blocked halve the damage
 	Damage = bBlocked ? Damage / 2 : Damage;
 	
 	float TargetArmor = 0.f;
@@ -114,6 +120,8 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	// Critical Hit Resistance reduces Critical Hit Chance by a certain percentage
 	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
 	const bool bCriticalDamage = FMath::FRandRange(0.f, 100.f) < EffectiveCriticalHitChance;
+
+	UDGAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bCriticalDamage);
 	
 	// Double damage plus a bonus if critical hit
 	Damage = bCriticalDamage ? Damage * 2.f + SourceCriticalHitDamage : Damage;

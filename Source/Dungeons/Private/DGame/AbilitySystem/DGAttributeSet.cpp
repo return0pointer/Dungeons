@@ -3,6 +3,8 @@
 #include "Net/UnrealNetwork.h"
 #include "GameplayEffectExtension.h"
 #include "DGame/DGGameplayTags.h"
+#include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
+#include "DGame/AbilitySystem/DGAbilitySystemLibrary.h"
 #include "DGame/Interaction/CombatInterface.h"
 #include "DGame/Player/DGPlayerController.h"
 #include "GameFramework/Character.h"
@@ -78,18 +80,6 @@ void UDGAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, fl
 	}
 }
 
-void UDGAttributeSet::ShowFloatingText(const FEffectProperties& Properties, const float Damage) const
-{
-	if (Properties.SourceCharacter != Properties.TargetCharacter)
-	{
-		if (ADGPlayerController* PC = Cast<ADGPlayerController>(
-			UGameplayStatics::GetPlayerController(Properties.SourceCharacter, 0)))
-		{
-			PC->ShowDamageNumber(Damage, Properties.TargetCharacter);
-		}
-	}
-}
-
 void UDGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -135,7 +125,21 @@ void UDGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 				Properties.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
 
-			ShowFloatingText(Properties, LocalIncomingDamage);
+			const bool bBlocked = UDGAbilitySystemLibrary::IsBlockHit(Properties.EffectContextHandle);
+			const bool bCriticalHit = UDGAbilitySystemLibrary::IsCriticalHit(Properties.EffectContextHandle);
+			ShowFloatingText(Properties, LocalIncomingDamage, bCriticalHit, bBlocked);
+		}
+	}
+}
+
+void UDGAttributeSet::ShowFloatingText(const FEffectProperties& Properties, const float Damage, bool bCriticalHit, bool bBlockedHit) const
+{
+	if (Properties.SourceCharacter != Properties.TargetCharacter)
+	{
+		if (ADGPlayerController* PC = Cast<ADGPlayerController>(
+			UGameplayStatics::GetPlayerController(Properties.SourceCharacter, 0)))
+		{
+			PC->ShowDamageNumber(Damage, Properties.TargetCharacter, bCriticalHit, bBlockedHit);
 		}
 	}
 }
@@ -144,7 +148,6 @@ void UDGAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) cons
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UDGAttributeSet, Health, OldHealth);
 }
-
 
 void UDGAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana) const
 {
@@ -155,7 +158,6 @@ void UDGAttributeSet::OnRep_Stamina(const FGameplayAttributeData& OldStamina) co
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UDGAttributeSet, Stamina, OldStamina);
 }
-
 
 void UDGAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
 {

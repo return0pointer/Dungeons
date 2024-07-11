@@ -3,6 +3,7 @@
 
 #include "DGame/AbilitySystem/DGAbilitySystemLibrary.h"
 
+#include "DGame/DGAbilityTypes.h"
 #include "DGame/DGGameMode.h"
 #include "DGame/Player/DGPlayerState.h"
 #include "DGame/UI/HUD/DGHUD.h"
@@ -81,4 +82,38 @@ UCharacterClassInfo* UDGAbilitySystemLibrary::GetCharacterClassInfo(const UObjec
 	if (GM == nullptr) return nullptr;
 
 	return GM->CharacterClassInfo;
+}
+
+bool UDGAbilitySystemLibrary::IsBlockHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FDGGameplayEffectContext* DGEffectContext = static_cast<const FDGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DGEffectContext->IsBlockedHit();
+	}
+	return false;
+}
+
+bool UDGAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FDGGameplayEffectContext* DGEffectContext = static_cast<const FDGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DGEffectContext->IsCriticalHit();
+	}
+	return false;
+}
+
+void UDGAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
+{
+	if (FDGGameplayEffectContext* DGEffectContext = static_cast<FDGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DGEffectContext->SetIsBlockedHit(bInIsBlockedHit);
+	}
+}
+
+void UDGAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit)
+{
+	if (FDGGameplayEffectContext* DGEffectContext = static_cast<FDGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DGEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+	}
 }
