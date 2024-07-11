@@ -29,9 +29,6 @@ void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
 		AActor* Owner = GetOwningActorFromActorInfo();
-		DrawDebugSphere(Owner->GetWorld(), SocketLocation, 8, 8, FColor::Red, true, 20);
-		DrawDebugSphere(Owner->GetWorld(), ProjectileTargetLocation, 8, 8, FColor::Blue, true, 20);
-		DrawDebugLine(Owner->GetWorld(), SocketLocation, ProjectileTargetLocation, FColor::Green, true, 20);
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 		Rotation.Pitch = 0.f;
 		
@@ -49,7 +46,17 @@ void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 		Projectile->SetOwnerAvatar(GetAvatarActorFromActorInfo());
 
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
-		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
+		EffectContextHandle.SetAbility(this);
+		EffectContextHandle.AddSourceObject(Projectile);
+		TArray<TWeakObjectPtr<AActor>> Actors;
+		Actors.Add(Projectile);
+		EffectContextHandle.AddActors(Actors);
+		FHitResult HitResult;
+		HitResult.Location = ProjectileTargetLocation;
+		EffectContextHandle.AddHitResult(HitResult);
+		
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
 		const FDGGameplayTags GameplayTags = FDGGameplayTags::Get();
 		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, ScaledDamage);

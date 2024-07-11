@@ -1,0 +1,4 @@
+---,1,10,20,40
+ArmorPenetration,0.25,0.15,0.085,0.035
+EffectiveArmor,0.333,0.25,0.15,0.085
+CriticalHitResistance,0.25,0.15,0.085,0.035
