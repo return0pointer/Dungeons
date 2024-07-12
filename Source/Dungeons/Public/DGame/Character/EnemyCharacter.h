@@ -8,6 +8,8 @@
 #include "EnemyCharacter.generated.h"
 
 class UWidgetComponent;
+class UBehaviorTree;
+class ADGAIController;
 
 UCLASS()
 class DUNGEONS_API AEnemyCharacter : public ADGCharacterBase, public IEnemyInterface
@@ -16,6 +18,8 @@ class DUNGEONS_API AEnemyCharacter : public ADGCharacterBase, public IEnemyInter
 
 public:
 	AEnemyCharacter();
+	virtual void PossessedBy(AController* NewController) override;
+	
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
 	void SetupBinding();
@@ -55,5 +59,12 @@ protected:
 	ECharacterClass CharacterClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UWidgetComponent> HealthBar;	
+	TObjectPtr<UWidgetComponent> HealthBar;
+
+	UPROPERTY(EditAnywhere, Category="AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY(EditAnywhere, Category="AI")
+	TObjectPtr<ADGAIController> DgAIController;
+	
 };

@@ -1,9 +1,13 @@
 #include "DGame/Character/EnemyCharacter.h"
+
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/WidgetComponent.h"
 #include "DGame/DGGameplayTags.h"
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 #include "DGame/AbilitySystem/DGAbilitySystemLibrary.h"
 #include "DGame/AbilitySystem/DGAttributeSet.h"
+#include "DGame/AI/DGAIController.h"
 #include "DGame/UI/Widget/DGUserWidget.h"
 #include "Dungeons/Dungeons.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -17,6 +21,12 @@ AEnemyCharacter::AEnemyCharacter()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	
 	AttributeSet = CreateDefaultSubobject<UDGAttributeSet>("AttributeSet");
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
@@ -26,6 +36,19 @@ AEnemyCharacter::AEnemyCharacter()
 	CharacterClass = ECharacterClass::Warrior;
 	BaseWalkSpeed = 250.f;
 	LifeSpanAfterDie = 5.f;
+}
+
+void AEnemyCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!HasAuthority()) return;
+	
+	DgAIController = Cast<ADGAIController>(NewController);
+	DgAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	DgAIController->RunBehaviorTree(BehaviorTree);
+	DgAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
+	DgAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
 }
 
 void AEnemyCharacter::HighlightActor()
@@ -102,7 +125,9 @@ void AEnemyCharacter::Die()
 void AEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
-	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed; 
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	
+	DgAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void AEnemyCharacter::InitAbilityActorInfo()

@@ -10,7 +10,7 @@ public class Dungeons : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "MotionTrajectory", "EnhancedInput", "GameplayAbilities", "GameplayTags", "GameplayTasks", "MotionWarping" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "NavigationSystem", "Niagara" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "NavigationSystem", "Niagara", "AIModule" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
