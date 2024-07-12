@@ -25,8 +25,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;
-
-	void SetOwnerAvatar(AActor* InOwnerAvatar) { OwnerAvatar = InOwnerAvatar; }
 	
 protected:
 	virtual void BeginPlay() override;
@@ -41,12 +39,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan;
 
-	bool bHit;
-
-	UPROPERTY()
-	TObjectPtr<AActor> OwnerAvatar = nullptr;
-
-	
+	bool bHit;	
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UNiagaraSystem> ImpactEffect;

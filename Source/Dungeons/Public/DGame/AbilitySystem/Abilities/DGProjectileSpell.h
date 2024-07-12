@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DGame/AbilitySystem/Abilities/DGGameplayAbility.h"
+#include "DamageGameplayAbility.h"
 #include "DGProjectileSpell.generated.h"
 
 
@@ -9,7 +9,7 @@ class ADGProjectile;
 class UGameplayEffect;
 
 UCLASS()
-class DUNGEONS_API UDGProjectileSpell : public UDGGameplayAbility
+class DUNGEONS_API UDGProjectileSpell : public UDamageGameplayAbility
 {
 	GENERATED_BODY()
 
@@ -24,6 +24,4 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	TSubclassOf<ADGProjectile> ProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Projectile")
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

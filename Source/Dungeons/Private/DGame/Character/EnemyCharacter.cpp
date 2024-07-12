@@ -80,7 +80,10 @@ void AEnemyCharacter::BeginPlay()
 	
 	InitAbilityActorInfo();
 
-	UDGAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+	if (HasAuthority())
+	{
+		UDGAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);		
+	}
 
 	SetupBinding();
 }
@@ -107,7 +110,10 @@ void AEnemyCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UDGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
-	InitializeDefaultAttributes();
+	if (HasAuthority())
+	{
+		InitializeDefaultAttributes();
+	}
 }
 
 void AEnemyCharacter::InitializeDefaultAttributes() const

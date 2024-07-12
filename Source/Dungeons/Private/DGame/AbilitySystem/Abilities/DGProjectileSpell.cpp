@@ -19,8 +19,7 @@ void UDGProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 }
 
 void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
-{
-	
+{	
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
@@ -29,8 +28,7 @@ void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
 		AActor* Owner = GetOwningActorFromActorInfo();
-		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
-		Rotation.Pitch = 0.f;
+		const FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 		
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
@@ -42,8 +40,6 @@ void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 			Owner,
 			Cast<APawn>(Owner),
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
-		Projectile->SetOwnerAvatar(GetAvatarActorFromActorInfo());
 
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
@@ -58,8 +54,13 @@ void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation
 		
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
 		const FDGGameplayTags GameplayTags = FDGGameplayTags::Get();
-		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, ScaledDamage);
+
+		for (auto& Pair : DamageTypes)
+		{
+			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
+		}		
+		
 		Projectile->DamageEffectSpecHandle = SpecHandle;
 		
 		Projectile->FinishSpawning(SpawnTransform);

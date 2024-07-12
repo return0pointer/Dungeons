@@ -65,9 +65,14 @@ void ADGProjectile::PlayImpactEffects() const
 void ADGProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Result)
 {
-	if (OtherActor == OwnerAvatar) return;
-	
-	PlayImpactEffects();
+	if (!DamageEffectSpecHandle.Data.IsValid() || DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+	{
+		return;
+	}
+	if (!bHit)
+	{
+		PlayImpactEffects();
+	}	
 	
 	if (HasAuthority())
 	{
