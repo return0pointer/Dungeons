@@ -8,6 +8,7 @@
 #include "DGame/Interaction/CombatInterface.h"
 #include "DGCharacterBase.generated.h"
 
+class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
 class UCharacterTrajectoryComponent;
@@ -39,6 +40,7 @@ public:
 	virtual AActor* GetAvatar_Implementation() override;	
 	virtual void Die() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	// end Combat Interface
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -50,7 +52,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(EditAnywhere, Category = "Equip")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equip")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 	
 	UPROPERTY(EditAnywhere, Category = "_Settings|Socket")
@@ -101,6 +103,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="_Settings|Material")
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="_Settings|Effects")
+	UNiagaraSystem* BloodEffect;
 
 private:
 

@@ -15,13 +15,13 @@ void UDGProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
+void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, FGameplayTag SocketTag)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
 	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(
-		GetAvatarActorFromActorInfo(), FDGGameplayTags::Get().Montage_Attack_Weapon);
+		GetAvatarActorFromActorInfo(), SocketTag);
 	AActor* Owner = GetOwningActorFromActorInfo();
 	const FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 

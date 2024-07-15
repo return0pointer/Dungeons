@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "DGame/AbilitySystem/Abilities/DGGameplayAbility.h"
+#include "DGame/Interaction/CombatInterface.h"
 #include "DamageGameplayAbility.generated.h"
 
 /**
@@ -24,4 +25,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	TMap<FGameplayTag, FScalableFloat> DamageTypes;
+
+	UFUNCTION(BlueprintPure, Category="Montage")
+	bool GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages, FTaggedMontage& OutTaggedMontage) const;
 };

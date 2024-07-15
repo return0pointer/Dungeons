@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Components/AudioComponent.h"
+#include "DGame/AbilitySystem/DGAbilitySystemLibrary.h"
 #include "Dungeons/Dungeons.h"
 
 ADGProjectile::ADGProjectile()
@@ -69,6 +70,11 @@ void ADGProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	{
 		return;
 	}
+	if(!UDGAbilitySystemLibrary::IsNotFriend(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
+	{
+		return;
+	}
+	
 	if (!bHit)
 	{
 		PlayImpactEffects();

@@ -19,7 +19,7 @@ protected:
 	                             const FGameplayEventData* TriggerEventData) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void SpawnProjectile(const FVector& ProjectileTargetLocation);
+	void SpawnProjectile(const FVector& ProjectileTargetLocation, FGameplayTag SocketTag);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	TSubclassOf<ADGProjectile> ProjectileClass;

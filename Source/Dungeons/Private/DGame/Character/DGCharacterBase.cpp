@@ -59,6 +59,11 @@ TArray<FTaggedMontage> ADGCharacterBase::GetAttackMontages_Implementation()
 	return AttackMontages;
 }
 
+UNiagaraSystem* ADGCharacterBase::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
 void ADGCharacterBase::MulticastHandleDeath_Implementation()
 {
 	Weapon->SetSimulatePhysics(true);
