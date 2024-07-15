@@ -25,25 +25,44 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equip")
 	TObjectPtr<UCharacterTrajectoryComponent> CharacterTrajectory;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MotionWarping")
+	class UMotionWarpingComponent* MotionWarpingComponent;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
-	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	// Combat Interface
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;	
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageAttackTag) override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;	
 	virtual void Die() override;
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	// end Combat Interface
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
+
+	UPROPERTY(EditAnywhere, Category = "_Settings|Combat")
+	TArray<FTaggedMontage> AttackMontages;
+	
 protected:
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(EditAnywhere, Category = "Equip")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 	
-	UPROPERTY(EditAnywhere, Category = "_Settings|Equip")
+	UPROPERTY(EditAnywhere, Category = "_Settings|Socket")
 	FName WeaponTipSocketName;
+
+	UPROPERTY(EditAnywhere, Category = "_Settings|Socket")
+	FName RightHandSocketName;
+
+	UPROPERTY(EditAnywhere, Category = "_Settings|Socket")
+	FName LeftHandSocketName;
 	
-	virtual FVector GetCombatSocketLocation();
+	bool bDead = false;
 	
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -82,6 +101,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="_Settings|Material")
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
 private:
 
 	UPROPERTY(EditAnywhere, Category = "_Settings|GAS|Abilities")

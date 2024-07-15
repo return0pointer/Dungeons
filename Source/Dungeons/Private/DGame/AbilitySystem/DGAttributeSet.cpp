@@ -152,6 +152,11 @@ void UDGAttributeSet::ShowFloatingText(const FEffectProperties& Properties, cons
 		if (ADGPlayerController* PC = Cast<ADGPlayerController>(Properties.SourceCharacter->Controller))
 		{
 			PC->ShowDamageNumber(Damage, Properties.TargetCharacter, bCriticalHit, bBlockedHit);
+			return;
+		}
+		if (ADGPlayerController* PC = Cast<ADGPlayerController>(Properties.TargetCharacter->Controller))
+		{
+			PC->ShowDamageNumber(Damage, Properties.TargetCharacter, bCriticalHit, bBlockedHit);
 		}
 	}
 }
@@ -281,7 +286,7 @@ void UDGAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& 
 	{
 		Properties.SourceAvatarActor = Properties.SourceASC->AbilityActorInfo->AvatarActor.Get();
 		Properties.SourceController = Properties.SourceASC->AbilityActorInfo->PlayerController.Get();
-		if (Properties.SourceASC == nullptr && Properties.SourceAvatarActor != nullptr)
+		if (Properties.SourceController == nullptr && Properties.SourceAvatarActor != nullptr)
 		{
 			if (const APawn* Pawn = Cast<APawn>(Properties.SourceAvatarActor))
 			{

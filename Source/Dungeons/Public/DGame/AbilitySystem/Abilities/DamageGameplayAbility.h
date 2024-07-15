@@ -14,7 +14,9 @@ class DUNGEONS_API UDamageGameplayAbility : public UDGGameplayAbility
 {
 	GENERATED_BODY()
 
-
+	UFUNCTION(BlueprintCallable)
+	void CauseDamage(AActor* TargetActor);
+	
 protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")

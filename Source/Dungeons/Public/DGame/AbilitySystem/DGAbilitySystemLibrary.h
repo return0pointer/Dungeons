@@ -29,7 +29,7 @@ public:
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
 
 	UFUNCTION(BlueprintCallable, Category="DGAbilitySystemLibrary|Character Class Defaults")
-	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
+	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterClass CharacterClass);
 
 	UFUNCTION(BlueprintCallable, Category="DGAbilitySystemLibrary|Character Class Defaults")
 	static  UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
@@ -45,4 +45,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="DGAbilitySystemLibrary|Gameplay Effects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+
+	UFUNCTION(BlueprintCallable, Category="DGAbilitySystemLibrary|Combat")
+	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, float Radius, const FVector& SphereLocation, const TArray<AActor*>& ActorsToIgnore, TArray<AActor*>& OutOverlappingActors);
+
+	UFUNCTION(BlueprintPure, Category="DGAbilitySystemLibrary|Fraction")
+	static bool IsNotFriend(const AActor* FirstActor, const AActor* SecondActor);
 };

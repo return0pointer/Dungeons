@@ -26,6 +26,9 @@ AEnemyCharacter::AEnemyCharacter()
 	bUseControllerRotationYaw = false;
 
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+
+	GetCharacterMovement()->MaxAcceleration = 600.f;
+	GetCharacterMovement()->BrakingDecelerationWalking = 1200.f;
 	
 	AttributeSet = CreateDefaultSubobject<UDGAttributeSet>("AttributeSet");
 
@@ -105,7 +108,7 @@ void AEnemyCharacter::BeginPlay()
 
 	if (HasAuthority())
 	{
-		UDGAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);		
+		UDGAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);		
 	}
 
 	SetupBinding();
@@ -122,12 +125,24 @@ void AEnemyCharacter::Die()
 	Super::Die();	
 }
 
+void AEnemyCharacter::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* AEnemyCharacter::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
 void AEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
-	
-	DgAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
+	if (DgAIController && DgAIController->GetBlackboardComponent())
+	{
+		DgAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);		
+	}
 }
 
 void AEnemyCharacter::InitAbilityActorInfo()

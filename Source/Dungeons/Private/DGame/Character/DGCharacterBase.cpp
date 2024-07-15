@@ -2,7 +2,9 @@
 
 #include "AbilitySystemComponent.h"
 #include "CharacterTrajectoryComponent.h"
+#include "MotionWarpingComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "DGame/DGGameplayTags.h"
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 #include "Dungeons/Dungeons.h"
 
@@ -22,6 +24,8 @@ ADGCharacterBase::ADGCharacterBase()
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
+	
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("UMotionWarping");
 }
 
 UAbilitySystemComponent* ADGCharacterBase::GetAbilitySystemComponent() const
@@ -34,10 +38,25 @@ UAnimMontage* ADGCharacterBase::GetHitReactMontage_Implementation()
 	return HitReactMontage;
 }
 
+bool ADGCharacterBase::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* ADGCharacterBase::GetAvatar_Implementation()
+{
+	return this;
+}
+
 void ADGCharacterBase::Die()
 {
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 	MulticastHandleDeath();
+}
+
+TArray<FTaggedMontage> ADGCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttackMontages;
 }
 
 void ADGCharacterBase::MulticastHandleDeath_Implementation()
@@ -54,6 +73,7 @@ void ADGCharacterBase::MulticastHandleDeath_Implementation()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetCapsuleComponent()->SetSimulatePhysics(false);
 	Dissolve();
+	bDead = true;
 }
 
 
@@ -62,10 +82,20 @@ void ADGCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-FVector ADGCharacterBase::GetCombatSocketLocation()
+FVector ADGCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageAttackTag)
 {
-	check(Weapon)
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	const FDGGameplayTags GameplayTags = FDGGameplayTags::Get();
+	if (MontageAttackTag.MatchesTagExact(GameplayTags.Montage_Attack_Weapon) && IsValid(Weapon))
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	} else if(MontageAttackTag.MatchesTagExact(GameplayTags.Montage_Attack_RightHand))
+	{
+		return GetMesh()->GetSocketLocation(RightHandSocketName);
+	} else if(MontageAttackTag.MatchesTagExact(GameplayTags.Montage_Attack_LeftHand))
+	{
+		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+	}
+	return FVector();
 }
 
 void ADGCharacterBase::InitAbilityActorInfo() 

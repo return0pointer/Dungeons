@@ -1,8 +1,4 @@
-
-
-
 #include "DGame/Character/DGCharacter.h"
-
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
@@ -11,7 +7,6 @@
 #include "DGame/UI/HUD/DGHUD.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "MotionWarpingComponent.h"
 
 ADGCharacter::ADGCharacter()
 {
@@ -41,8 +36,6 @@ ADGCharacter::ADGCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-
-	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("UMotionWarping");
 }
 
 void ADGCharacter::PossessedBy(AController* NewController)
