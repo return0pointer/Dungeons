@@ -7,6 +7,7 @@
 #include "DGame/DGGameplayTags.h"
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 #include "Dungeons/Dungeons.h"
+#include "Kismet/GameplayStatics.h"
 
 ADGCharacterBase::ADGCharacterBase()
 {
@@ -64,8 +65,25 @@ UNiagaraSystem* ADGCharacterBase::GetBloodEffect_Implementation()
 	return BloodEffect;
 }
 
+FTaggedMontage ADGCharacterBase::GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag)
+{
+	for (FTaggedMontage AttackMontage : AttackMontages)
+	{
+		if (AttackMontage.MontageTag == MontageTag)
+		{
+			return AttackMontage;
+		}
+	}
+	return FTaggedMontage();
+}
+
 void ADGCharacterBase::MulticastHandleDeath_Implementation()
 {
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
+	}
+	
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
@@ -90,17 +108,19 @@ void ADGCharacterBase::BeginPlay()
 FVector ADGCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageAttackTag)
 {
 	const FDGGameplayTags GameplayTags = FDGGameplayTags::Get();
-	if (MontageAttackTag.MatchesTagExact(GameplayTags.Montage_Attack_Weapon) && IsValid(Weapon))
+
+	if (MeshSocketNames.Contains(MontageAttackTag))
 	{
-		return Weapon->GetSocketLocation(WeaponTipSocketName);
-	} else if(MontageAttackTag.MatchesTagExact(GameplayTags.Montage_Attack_RightHand))
-	{
-		return GetMesh()->GetSocketLocation(RightHandSocketName);
-	} else if(MontageAttackTag.MatchesTagExact(GameplayTags.Montage_Attack_LeftHand))
-	{
-		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+		const FName SocketName = *MeshSocketNames.Find(MontageAttackTag);
+		return GetMesh()->GetSocketLocation(SocketName);
 	}
-	return FVector();
+	if (IsValid(Weapon) && WeaponSocketNames.Contains(MontageAttackTag))
+	{
+		const FName SocketName = *WeaponSocketNames.Find(MontageAttackTag);
+		return Weapon->GetSocketLocation(SocketName);		
+	}
+	
+	return FVector();	
 }
 
 void ADGCharacterBase::InitAbilityActorInfo() 

@@ -15,7 +15,7 @@ void UDGProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, FGameplayTag SocketTag)
+void UDGProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;

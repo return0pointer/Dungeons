@@ -30,6 +30,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="MotionWarping")
 	class UMotionWarpingComponent* MotionWarpingComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equip")
+	TObjectPtr<USkeletalMeshComponent> Weapon;
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
@@ -41,28 +44,16 @@ public:
 	virtual void Die() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
+	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
 	// end Combat Interface
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
 
-	UPROPERTY(EditAnywhere, Category = "_Settings|Combat")
-	TArray<FTaggedMontage> AttackMontages;
+	
 	
 protected:
 	virtual void BeginPlay() override;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equip")
-	TObjectPtr<USkeletalMeshComponent> Weapon;
-	
-	UPROPERTY(EditAnywhere, Category = "_Settings|Socket")
-	FName WeaponTipSocketName;
-
-	UPROPERTY(EditAnywhere, Category = "_Settings|Socket")
-	FName RightHandSocketName;
-
-	UPROPERTY(EditAnywhere, Category = "_Settings|Socket")
-	FName LeftHandSocketName;
 	
 	bool bDead = false;
 	
@@ -73,15 +64,6 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 
 	virtual void InitAbilityActorInfo();
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Attributes")
-	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Attributes")
-	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
-
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Attributes")
-	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float level) const;
 	virtual void InitializeDefaultAttributes() const;
@@ -97,22 +79,47 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="_Settings|Material")
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="_Settings|Combat|Material")
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="_Settings|Material")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="_Settings|Combat|Material")
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+	
+	// Settings
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="_Settings|Effects")
-	UNiagaraSystem* BloodEffect;
+	// Sockets
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|Combat|Socket")
+	TMap<FGameplayTag, FName> MeshSocketNames;
 
-private:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|Combat|Socket")
+	TMap<FGameplayTag, FName> WeaponSocketNames;
 
-	UPROPERTY(EditAnywhere, Category = "_Settings|GAS|Abilities")
+	// GAS
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|GAS|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
+	// Effects
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="_Settings|Combat|Effects")
+	UNiagaraSystem* BloodEffect;
+	
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="_Settings|Combat|Effects")
+	USoundBase* DeathSound;
 
-	UPROPERTY(EditAnywhere, Category = "_Settings|Combat")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|Combat|Montage")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "_Settings|Combat|Attack")
+	TArray<FTaggedMontage> AttackMontages;
 	
 };

@@ -52,15 +52,13 @@ void ADGProjectile::Destroyed()
 	Super::Destroyed();
 }
 
-void ADGProjectile::PlayImpactEffects() const
+void ADGProjectile::PlayImpactEffects()
 {
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	if (LoopingSoundComponent)
-	{
-		LoopingSoundComponent->Stop();
-	}
- 	
+	if (LoopingSoundComponent) LoopingSoundComponent->Stop();
+
+	bHit = true;
 }
 
 void ADGProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

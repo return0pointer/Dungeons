@@ -7,6 +7,7 @@
 
 class ADGProjectile;
 class UGameplayEffect;
+struct FGameplayTag;
 
 UCLASS()
 class DUNGEONS_API UDGProjectileSpell : public UDamageGameplayAbility
@@ -19,7 +20,7 @@ protected:
 	                             const FGameplayEventData* TriggerEventData) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void SpawnProjectile(const FVector& ProjectileTargetLocation, FGameplayTag SocketTag);
+	void SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Projectile")
 	TSubclassOf<ADGProjectile> ProjectileClass;

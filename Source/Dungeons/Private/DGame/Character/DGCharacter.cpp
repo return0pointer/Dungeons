@@ -1,10 +1,12 @@
 #include "DGame/Character/DGCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 #include "DGame/Player/DGPlayerController.h"
 #include "DGame/Player/DGPlayerState.h"
 #include "DGame/UI/HUD/DGHUD.h"
+#include "Dungeons/Dungeons.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -53,6 +55,28 @@ void ADGCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+void ADGCharacter::SetInvulnerability_Implementation(bool Invulnerability, bool ChangeVisibility)
+{
+	if (Invulnerability)
+	{
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Ignore);
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+		GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
+	}
+	if (ChangeVisibility)
+	{
+		GetMesh()->SetVisibility(!Invulnerability, true);
+	}
+}
+
+UAnimMontage* ADGCharacter::GetJumpMontage_Implementation()
+{
+	return JumpMontage;
+}
 
 int32 ADGCharacter::GetPlayerLevel()
 {

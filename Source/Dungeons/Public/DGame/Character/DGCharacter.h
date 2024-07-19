@@ -20,10 +20,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
 	class USpringArmComponent* SpringArmComponent;
 
+	virtual void SetInvulnerability_Implementation(bool Invulnerability, bool ChangeVisibility) override;
 
+	virtual UAnimMontage* GetJumpMontage_Implementation() override;
 	
 	virtual int32 GetPlayerLevel() override;
 
 protected:
 	virtual void InitAbilityActorInfo() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="_Settings|Jump")
+	UAnimMontage* JumpMontage;
 };

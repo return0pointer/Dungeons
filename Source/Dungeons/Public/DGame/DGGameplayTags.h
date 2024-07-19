@@ -43,6 +43,7 @@ public:
  FGameplayTag InputTag_2;
  FGameplayTag InputTag_3;
  FGameplayTag InputTag_4;
+ FGameplayTag InputTag_DodgeJump;
 
  FGameplayTag Damage;
  FGameplayTag Damage_Fire;
@@ -52,9 +53,18 @@ public:
 
  FGameplayTag Abilities_Attack;
 
- FGameplayTag Montage_Attack_Weapon;
- FGameplayTag Montage_Attack_RightHand;
- FGameplayTag Montage_Attack_LeftHand;
+ FGameplayTag CombatSocket_Weapon;
+ FGameplayTag CombatSocket_RightHand;
+ FGameplayTag CombatSocket_LeftHand;
+ FGameplayTag CombatSocket_Tail;
+ 
+ FGameplayTag Montage_Attack_1;
+ FGameplayTag Montage_Attack_2;
+ FGameplayTag Montage_Attack_3;
+ FGameplayTag Montage_Attack_4;
+ 
+ FGameplayTag Montage_Ability_DodgeJump_In;
+ FGameplayTag Montage_Ability_DodgeJump_Out;
  
 
  TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
