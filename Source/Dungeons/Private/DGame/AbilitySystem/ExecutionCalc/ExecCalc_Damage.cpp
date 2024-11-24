@@ -99,7 +99,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		checkf(DGDamageStatics().TagsToCaptureDefs.Contains(ResistanceTag), TEXT("TagsTOCaptureDefs doesnt containt Tag: [%s] in ExecCalc_Damage"), *ResistanceTag.ToString());
 		const FGameplayEffectAttributeCaptureDefinition CaptureDef = DGDamageStatics().TagsToCaptureDefs[ResistanceTag];
 		
-		const float DamageByCallerValue = Spec.GetSetByCallerMagnitude(DamageTypeTag);
+		const float DamageByCallerValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false);
 		
 		float Resistance = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluateParameters, Resistance);

@@ -37,7 +37,7 @@ ADGCharacter::ADGCharacter()
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = false;	
 }
 
 void ADGCharacter::PossessedBy(AController* NewController)

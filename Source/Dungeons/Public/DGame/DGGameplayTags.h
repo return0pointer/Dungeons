@@ -52,6 +52,7 @@ public:
  FGameplayTag Damage_Physical;
 
  FGameplayTag Abilities_Attack;
+ FGameplayTag Abilities_Summon;
 
  FGameplayTag CombatSocket_Weapon;
  FGameplayTag CombatSocket_RightHand;
@@ -62,6 +63,7 @@ public:
  FGameplayTag Montage_Attack_2;
  FGameplayTag Montage_Attack_3;
  FGameplayTag Montage_Attack_4;
+ FGameplayTag Montage_Summon;
  
  FGameplayTag Montage_Ability_DodgeJump_In;
  FGameplayTag Montage_Ability_DodgeJump_Out;

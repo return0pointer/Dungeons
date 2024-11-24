@@ -24,7 +24,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Summoning")
 	int32 NumMinions = 5;
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Summoning")
 	TArray<TSubclassOf<APawn>> MinionClasses;
 

@@ -77,6 +77,16 @@ FTaggedMontage ADGCharacterBase::GetTaggedMontageByTag_Implementation(const FGam
 	return FTaggedMontage();
 }
 
+int32 ADGCharacterBase::GetMinionCount_Implementation()
+{
+	return MinionCount;
+}
+
+void ADGCharacterBase::IncrementMinionCount_Implementation(int32 Amount)
+{
+	MinionCount += Amount;
+}
+
 void ADGCharacterBase::MulticastHandleDeath_Implementation()
 {
 	if (DeathSound)

@@ -192,6 +192,11 @@ void FDGGameplayTags::InitializeNativeGameplayTags()
 	FString("Attack ability")
 	);
 	
+	GameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Abilities.Summon"),
+	FString("Summon ability")
+	);
+	
 	// Combat Sockets
 	
 	GameplayTags.CombatSocket_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
@@ -234,6 +239,11 @@ void FDGGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Montage_Attack_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
 	FName("Montage.Attack.4"),
 	FString("Montage Attack 4")
+	);
+	
+	GameplayTags.Montage_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Montage.Summon"), 
+	FString("Montage Summon")
 	);
 	
 	GameplayTags.Montage_Ability_DodgeJump_In = UGameplayTagsManager::Get().AddNativeGameplayTag(
