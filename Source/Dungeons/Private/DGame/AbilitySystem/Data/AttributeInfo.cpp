@@ -3,6 +3,8 @@
 
 #include "DGame/AbilitySystem/Data/AttributeInfo.h"
 
+#include "Dungeons/DGLogChannels.h"
+
 FDGAttributeInfo UAttributeInfo::FindAttributeInfoForTag(const FGameplayTag& AttributeTag, bool bLogNotFound) const
 {
 	for (const FDGAttributeInfo& Info : AttributeInfo)
@@ -15,7 +17,7 @@ FDGAttributeInfo UAttributeInfo::FindAttributeInfoForTag(const FGameplayTag& Att
 
 	if (bLogNotFound)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Can't find Info for AttributeTag [%s] on AttributeInfo[%s]."), *AttributeTag.ToString(), *GetNameSafe(this));
+		UE_LOG(LogDG, Error, TEXT("Can't find Info for AttributeTag [%s] on AttributeInfo[%s]."), *AttributeTag.ToString(), *GetNameSafe(this));
 	}
 	return FDGAttributeInfo();
 }
