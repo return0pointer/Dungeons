@@ -6,6 +6,7 @@
 #include "DGame/UI/WidgetController/DGWidgetController.h"
 #include "OverlayWidgetController.generated.h"
 
+class UDGAbilitySystemComponent;
 class UAbilityInfo;
 class UDGUserWidget;
 
@@ -30,6 +31,8 @@ struct FUIWidgetRow : public FTableRowBase
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangeSignature, float, NewValue);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FDGAbilityInfo&, Info);
 
 UCLASS(BlueprintType, Blueprintable)
 class DUNGEONS_API UOverlayWidgetController : public UDGWidgetController
@@ -60,6 +63,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
+	
+	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
+	FAbilityInfoSignature AbilityInfoDelegate;
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
@@ -70,6 +76,8 @@ protected:
 	
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+	
+	void OnInitializeStartupAbilities(UDGAbilitySystemComponent* DgAbilitySystemComponent);
 };
 
 template <typename T>

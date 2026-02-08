@@ -2,6 +2,7 @@
 
 #include "DGame/AbilitySystem/DGAbilitySystemComponent.h"
 #include "DGame/AbilitySystem/DGAttributeSet.h"
+#include "DGame/AbilitySystem/Data/AbilityInfo.h"
 
 void UOverlayWidgetController::BroadcastInitialValue()
 {
@@ -58,9 +59,19 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			OnMaxStaminaChanged.Broadcast(Data.NewValue);
 		}
 		);
-
-	UDGAbilitySystemComponent* DgAbilitySystemComponent = Cast<UDGAbilitySystemComponent>(AbilitySystemComponent);
-	DgAbilitySystemComponent->OnEffectAssetTags.AddLambda(
+	
+	if (UDGAbilitySystemComponent* DgASC = Cast<UDGAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		if (DgASC->bStartupAbilitiesGive)
+		{
+			OnInitializeStartupAbilities(DgASC);
+		}
+		else
+		{
+			DgASC->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
+		}
+						
+		DgASC->OnEffectAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
 		{
 			for (const FGameplayTag& Tag : AssetTags)
@@ -73,6 +84,23 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				}
 			}
 		}
-	);
+		);
+	}
+	
+	
+}
+
+void UOverlayWidgetController::OnInitializeStartupAbilities(UDGAbilitySystemComponent* DgAbilitySystemComponent)
+{	
+	if (!DgAbilitySystemComponent->bStartupAbilitiesGive) return;
+	
+	FForEachAbility BroadcastDelegate;
+	BroadcastDelegate.BindLambda([this, DgAbilitySystemComponent](const FGameplayAbilitySpec& AbilitySpec)
+	{
+		FDGAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(DgAbilitySystemComponent->GetAbilityTagFromSpec(AbilitySpec));
+		Info.InputTag = DgAbilitySystemComponent->GetInputTagFromSpec(AbilitySpec);
+		AbilityInfoDelegate.Broadcast(Info);
+	});
+	DgAbilitySystemComponent->ForEachAbility(BroadcastDelegate);
 }
 

@@ -6,6 +6,7 @@
 #include "DGame/Player/DGPlayerState.h"
 #include "DGame/UI/HUD/DGHUD.h"
 #include "DGame/UI/WidgetController/DGWidgetController.h"
+#include "Engine/OverlapResult.h"
 #include "Kismet/GameplayStatics.h"
 
 UOverlayWidgetController* UDGAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
